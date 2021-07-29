@@ -1,4 +1,15 @@
+//√ボタンを作る
+//√「Twitterで投稿する」という名前のボタンにする
+// 遊びに行くボタンなどをつくる
+//そこをクリックしたら投稿するURLを開く
+
+// ehika調べた内容
+// URLを開く https://qiita.com/superman9387/items/868ce6ad60b3c177bff1
+// Twitterに投稿するURL https://publish.twitter.com/?buttonType=TweetButton&widget=Button
+//<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MyApp());
@@ -46,17 +57,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  // Twitterに投稿するURLに飛ぶ
+  _shareTwitter(String tweetText) async {
+    var url = 'https://twitter.com/intent/tweet?text=$tweetText';
+    var encodedUrl = Uri.encodeFull(url);
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+    if (await canLaunch(encodedUrl)) {
+      await launch(encodedUrl);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -94,20 +104,55 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'あなたは何度もそのボタンを押すことができるようになってます:',
+              'テーマを選んでね！',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 25, fontFamily: 'Poppins', fontWeight: FontWeight.bold)
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            TextButton(
+              onPressed: () => {_shareTwitter("課題を一緒にしませんか？？")},
+              child: Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  child: const Text("課題をする"),
+                ),
+              ),
             ),
+            TextButton(
+              onPressed: () => {_shareTwitter("遊びに行きませんか？⚾😆")},
+              child: Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  child: const Text("遊びに行く"),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => {_shareTwitter("ご飯行きませんか？")},
+              child: Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  child: const Text("食事する"),
+                ),
+              ),
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
