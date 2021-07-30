@@ -21,7 +21,13 @@ import 'package:hello_world/page/theme-selection.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as cloud_firestore;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MaterialApp(
       initialRoute: '/',
