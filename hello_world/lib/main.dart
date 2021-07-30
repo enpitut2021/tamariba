@@ -15,16 +15,6 @@
 // Twitterに投稿するURL https://publish.twitter.com/?buttonType=TweetButton&widget=Button
 //<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-// var firebaseConfig = {
-//         apiKey: "AIzaSyDRL718fwPKeR9yaoPv8HctlSkHbJBcrCs",
-//         authDomain: "tamariba.firebaseapp.com",
-//         projectId: "tamariba",
-//         storageBucket: "tamariba.appspot.com",
-//         messagingSenderId: "1059122947072",
-//         appId: "1:1059122947072:web:f7917e2de1bc20d097a4e5",
-//         measurementId: "G-9K473SGSNQ",
-//       };
-
 import 'package:flutter/material.dart';
 import 'package:hello_world/page/home.dart';
 import 'package:hello_world/page/theme-selection.dart';

@@ -27,6 +27,22 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+  <!-- Firebase Configuration -->
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyDRL718fwPKeR9yaoPv8HctlSkHbJBcrCs",
+      authDomain: "tamariba.firebaseapp.com",
+      projectId: "tamariba",
+      storageBucket: "tamariba.appspot.com",
+      messagingSenderId: "1059122947072",
+      appId: "1:1059122947072:web:f7917e2de1bc20d097a4e5",
+      measurementId: "G-9K473SGSNQ",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
