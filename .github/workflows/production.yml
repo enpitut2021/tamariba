@@ -1,4 +1,4 @@
-name: Deploy to Live Channel
+name: Deploy
 
 on:
   push:
@@ -19,11 +19,14 @@ jobs:
         with:
           flutter-version: "2.0.5"
       - run: flutter pub get
-      - run: flutter test
       - run: flutter build web
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          projectId: tamariba
-          channelId: live
+      - name: Install Firebase Tools
+        run: |
+          npm install -g firebase-tools
+        working-directory: ./
+      - name: Deploy
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          firebase deploy --only hosting --token $FIREBASE_TOKEN
+        working-directory: ./
