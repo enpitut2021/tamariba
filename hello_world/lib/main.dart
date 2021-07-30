@@ -1,7 +1,7 @@
-//√ボタンを作る
-//√「Twitterで投稿する」という名前のボタンにする
-// 遊びに行くボタンなどをつくる
-//そこをクリックしたら投稿するURLを開く
+// √ボタンを作る
+// √「Twitterで投稿する」という名前のボタンにする
+// √遊びに行くボタンなどをつくる
+// √そこをクリックしたら投稿するURLを開く
 
 // ehika調べた内容
 // URLを開く https://qiita.com/superman9387/items/868ce6ad60b3c177bff1
@@ -103,11 +103,12 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'テーマを選んでね！',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 25, fontFamily: 'Poppins', fontWeight: FontWeight.bold)
-            ),
+            Text('テーマを選んでね！',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 25,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.bold)),
             TextButton(
               onPressed: () => {_shareTwitter("課題を一緒にしませんか？？")},
               child: Container(
@@ -137,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             TextButton(
-              onPressed: () => {_shareTwitter("ご飯行きませんか？")},
+              onPressed: () => {_shareTwitter("ご飯行きませんか？🍜")},
               child: Container(
                 margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
                 padding: const EdgeInsets.all(5.0),
