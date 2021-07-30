@@ -35,7 +35,7 @@ void main() {
   runApp(
     MaterialApp(
       initialRoute: '/',
-      routes: <String, WidgetBuilder> {
+      routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => Home(),
         '/theme-selection': (BuildContext context) => ThemeSelection(),
       },
