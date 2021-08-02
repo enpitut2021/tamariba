@@ -7,9 +7,9 @@
 // stateless widgets
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart' as cloud_firestore;
-// import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ThemeSelection extends StatelessWidget {
   @override
@@ -52,6 +52,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<DocumentSnapshot> documentList = [];
+
+  _getState() async {
+    // 指定コレクションのドキュメント一覧を取得
+    final snapshot =
+        await Firestore.instance.collection('test_collection1').getDocuments();
+    // ドキュメント一覧を配列で格納
+    setState(() {
+      documentList = snapshot.documents;
+    });
+  }
+
   // Twitterに投稿するURLに飛ぶ
   _shareTwitter(String tweetText) async {
     var url = 'https://twitter.com/intent/tweet?text=$tweetText';
