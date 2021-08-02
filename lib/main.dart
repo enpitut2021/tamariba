@@ -25,8 +25,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as cloud_firestore;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(App());
 }
 
@@ -54,7 +55,7 @@ class _AppState extends State<App> {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          return Text('Something went wrong.');
+          return Text('error:${snapshot.error}');
         }
 
         // Once complete, show your application

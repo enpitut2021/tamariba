@@ -28,7 +28,7 @@ class ThemeSelection extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Scaffold(body: (MyHomePage(title: 'Flutter Demo Home Page'))),
     );
   }
 }
@@ -52,7 +52,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Stream<QuerySnapshot<Map<String, dynamic>>> _themeListStream = FirebaseFirestore.instance.collection('Theme').snapshots();
+  final Stream<QuerySnapshot<Map<String, dynamic>>> _themeListStream =
+      FirebaseFirestore.instance.collection('Theme').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
       stream: _themeListStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return Text('error:${snapshot.error}');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -69,10 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
         return new ListView(
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             return new ListTile(
               title: new Text(data['template']),
-              subtitle: new Text(data['themeId']),
             );
           }).toList(),
         );
