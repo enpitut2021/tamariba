@@ -52,11 +52,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Stream<QuerySnapshot> _themeListStream = FirebaseFirestore.instance.collection('Theme').snapshots();
+  final Stream<QuerySnapshot<Map<String, dynamic>>> _themeListStream = FirebaseFirestore.instance.collection('Theme').snapshots();
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: _themeListStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
