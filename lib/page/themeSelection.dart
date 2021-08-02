@@ -1,15 +1,7 @@
-// final dummyTheme = [
-//   {"themeId": 1, "theme": "課題をしよう", "template": "課題をしよう!"},
-//   {"themeId": 2, "theme": "ご飯を行く", "template": "ご飯に行こう"},
-//   {"themeId": 3, "theme": "遊びに行く", "template": "遊びに行こう"},
-// ];
-
 // stateless widgets
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class ThemeSelection extends StatelessWidget {
   @override
@@ -83,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             return new TextButton(
-              onPressed: () => {_shareTwitter(data['themplate'])},
+              onPressed: () => {_shareTwitter(data['template'])},
               child: Container(
                 margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
                 padding: const EdgeInsets.all(5.0),
