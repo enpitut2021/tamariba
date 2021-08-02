@@ -55,6 +55,17 @@ class _MyHomePageState extends State<MyHomePage> {
   final Stream<QuerySnapshot<Map<String, dynamic>>> _themeListStream =
       FirebaseFirestore.instance.collection('Theme').snapshots();
 
+  _shareTwitter(String tweetText) async {
+    var url = 'https://twitter.com/intent/tweet?text=$tweetText';
+    var encodedUrl = Uri.encodeFull(url);
+
+    if (await canLaunch(encodedUrl)) {
+      await launch(encodedUrl);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -71,8 +82,19 @@ class _MyHomePageState extends State<MyHomePage> {
         return new ListView(
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            return new ListTile(
-              title: new Text(data['template']),
+            return new TextButton(
+              onPressed: () => {_shareTwitter(data['themplate'])},
+              child: Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  child: Text(data['theme']),
+                ),
+              ),
             );
           }).toList(),
         );

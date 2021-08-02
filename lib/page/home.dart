@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'ThemeSelection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class Home extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(body: (MyHomePage(title: 'Home Page'))),
+      home: Scaffold(body: (MyHomePage(title: 'テーマを選んでね！'))),
     );
   }
 }
@@ -57,58 +56,54 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: _themeListStream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text('error:${snapshot.error}');
-        }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: _themeListStream,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('error:${snapshot.error}');
+                    }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
-        }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text("Loading");
+                    }
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(widget.title),  
-          ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('テーマを選んでね！',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold
-                  )
-                ),
-                ListView(
-                  children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-                    return new ListTile(
-                      title: new Text(data['template']),
+                    return new ListView(
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                            document.data() as Map<String, dynamic>;
+                        return new ListTile(
+                          title: new Text(data['template']),
+                          
+                        );
+                      }).toList(),
                     );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-        );
-
-        // return new ListView(
-        //   children: snapshot.data!.docs.map((DocumentSnapshot document) {
-        //     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        //     return new ListTile(
-        //       title: new Text(data['template']),
-        //     );
-        //   }).toList(),
-        // );
-      },
+                  })
+            ],
+          );
+        },
+      ),
     );
-  }
 
+    // return new ListView(
+    //   children: snapshot.data!.docs.map((DocumentSnapshot document) {
+    //     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+    //     return new ListTile(
+    //       title: new Text(data['template']),
+    //     );
+    //   }).toList(),
+    // );
+  }
 
   // @override
   // Widget build(BuildContext context) {

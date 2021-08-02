@@ -63,7 +63,7 @@ class _AppState extends State<App> {
           return MaterialApp(
             initialRoute: '/',
             routes: <String, WidgetBuilder>{
-              '/': (BuildContext context) => Home(),
+              '/': (BuildContext context) => ThemeSelection(),
               '/theme-selection': (BuildContext context) => ThemeSelection(),
             },
           );
