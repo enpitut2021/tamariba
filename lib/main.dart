@@ -16,6 +16,8 @@
 //<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 import 'package:flutter/material.dart';
+import 'package:hello_world/page/event.dart';
+import 'package:hello_world/page/eventList.dart';
 import 'package:hello_world/page/home.dart';
 import 'package:hello_world/page/themeSelection.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
@@ -65,6 +67,16 @@ class _AppState extends State<App> {
             routes: <String, WidgetBuilder>{
               '/': (BuildContext context) => ThemeSelection(),
               '/theme-selection': (BuildContext context) => ThemeSelection(),
+              '/event-list': (context) => EventListPage(),
+            },
+            onGenerateRoute: (settings) {
+              if (settings.name == '/event') {
+                return MaterialPageRoute(
+                  builder: (context) => EventPage(
+                      eventId: (settings.arguments as dynamic)["eventId"]),
+                );
+              }
+              return null;
             },
           );
         }

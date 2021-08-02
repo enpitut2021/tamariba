@@ -2,6 +2,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:hello_world/page/eventList.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'ThemeSelection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -84,7 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             document.data() as Map<String, dynamic>;
                         return new ListTile(
                           title: new Text(data['template']),
-                          
                         );
                       }).toList(),
                     );
