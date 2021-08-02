@@ -52,45 +52,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<DocumentSnapshot> documentList = [];
-
-  _getState() async {
-    // 指定コレクションのドキュメント一覧を取得
-    final snapshot = await FirebaseFirestore.instance
-        .collection('test_collection1')
-        .snapshots();
-    // ドキュメント一覧を配列で格納
-    setState(() {
-      documentList = snapshot.documents;
-    });
-  }
-
-  // Twitterに投稿するURLに飛ぶ
-  _shareTwitter(String tweetText) async {
-    var url = 'https://twitter.com/intent/tweet?text=$tweetText';
-    var encodedUrl = Uri.encodeFull(url);
-
-    if (await canLaunch(encodedUrl)) {
-      await launch(encodedUrl);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+  final Stream<QuerySnapshot> _themeListStream = FirebaseFirestore.instance.collection('Theme').snapshots();
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-        appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text(widget.title),
-        ),
-        body: Text('hello'));
+    return StreamBuilder<QuerySnapshot>(
+      stream: _themeListStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+
+        return new ListView(
+          children: snapshot.data!.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            return new ListTile(
+              title: new Text(data['template']),
+              subtitle: new Text(data['themeId']),
+            );
+          }).toList(),
+        );
+      },
+    );
   }
 }

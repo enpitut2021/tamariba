@@ -136,7 +136,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: const Text("食事する"),
                 ),
               ),
-            )
+            ),
+            TextButton(
+              onPressed: () =>
+                  {Navigator.of(context).pushNamed('/theme-selection')},
+              child: Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  child: const Text("Navigate ThemeSelection"),
+                ),
+              ),
+            ),
           ],
         ),
       ),
