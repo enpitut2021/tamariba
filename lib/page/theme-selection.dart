@@ -56,8 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _getState() async {
     // 指定コレクションのドキュメント一覧を取得
-    final snapshot =
-        await Firestore.instance.collection('test_collection1').getDocuments();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('test_collection1')
+        .snapshots();
     // ドキュメント一覧を配列で格納
     setState(() {
       documentList = snapshot.documents;

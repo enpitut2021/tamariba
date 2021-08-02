@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1059122947072",
+    "project_id": "tamariba",
+    "storage_bucket": "tamariba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059122947072:android:e5f6b4e1b7ebe86097a4e5",
+        "android_client_info": {
+          "package_name": "com.flutterflow.tamariba"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1059122947072-989s44k87bjrv0ms1a2ioc3ib4rhu21u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHPl1uBi-AIOWozWHCj2c-PjIVKFHfYVY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1059122947072-989s44k87bjrv0ms1a2ioc3ib4rhu21u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1059122947072-3h7dq2ghplupk3unuck09v9quijm5rsk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.tamariba"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
