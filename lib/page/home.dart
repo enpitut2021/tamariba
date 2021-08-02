@@ -1,6 +1,7 @@
 // stateless widgets
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'ThemeSelection.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -138,8 +139,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             TextButton(
-              onPressed: () =>
-                  {Navigator.of(context).pushNamed('/theme-selection')},
+              onPressed: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ThemeSelection(),
+                    ));
+              },
               child: Container(
                 margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
                 padding: const EdgeInsets.all(5.0),
