@@ -78,7 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
       if (_dateDataReactionFlag[i]) {
         target.update({
           'option': list['option'],
-          'reaction': [...list['reaction'], _userName.text],
+          'reaction': list['reaction'] == null
+              ? [_userName.text]
+              : [...list['reaction'], _userName.text],
         });
       }
 
@@ -122,38 +124,45 @@ class _MyHomePageState extends State<MyHomePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      '${eventData['title']}',
-                      style: const TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '👽投稿者: ${eventData['username']}',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      '📍日時を指定してリアクションする',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    TextField(
-                      controller: _userName,
-                      maxLength: 10, // 入力数
-                      maxLines: 1,
-                      decoration: const InputDecoration(
-                        icon: Icon(Icons.account_balance),
-                        hintText: 'リアクションする名前を入力して下さい',
-                        labelText: '名前',
-                      ),
-                    ),
+                    Container(
+                        margin: const EdgeInsets.all(10.0),
+                        child: Text(
+                          '${eventData['title']}',
+                          style: const TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
+                    Container(
+                        margin: const EdgeInsets.all(10.0),
+                        child: Text(
+                          '👽投稿者: ${eventData['username']}',
+                          style: const TextStyle(fontSize: 20),
+                        )),
+                    Container(
+                        margin: const EdgeInsets.fromLTRB(10, 40, 10, 10),
+                        child: Text(
+                          '📍日時でリアクションする',
+                          style: const TextStyle(fontSize: 20),
+                        )),
+                    Container(
+                        margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: TextField(
+                          controller: _userName,
+                          maxLength: 10, // 入力数
+                          maxLines: 1,
+                          decoration: const InputDecoration(
+                            hintText: 'リアクションする名前を入力して下さい',
+                            labelText: '名前',
+                          ),
+                        )),
                     Column(
                       // 日時のチェックボックス
                       children: dateData
                           .map<Widget>((e) => CheckboxListTile(
                                 title: Text('${e.data()['option']}'), // 日時
                                 subtitle: Text(
-                                    '${e.data()['reaction']}'), // リアクションした人の名前配列
+                                    '👍 ${e.data()['reaction'] == null ? 'リアクションしているユーザーが居ません' : e.data()['reaction'].join(", ")}'), // リアクションした人の名前配列
                                 controlAffinity:
                                     ListTileControlAffinity.leading,
                                 value:
