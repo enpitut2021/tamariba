@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Container(
                         margin: const EdgeInsets.fromLTRB(10, 40, 10, 10),
                         child: Text(
-                          '📍日時でリアクションする',
+                          '📍このイベントへの参加希望日時を出す',
                           style: const TextStyle(fontSize: 20),
                         )),
                     Container(
@@ -152,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           maxLength: 10, // 入力数
                           maxLines: 1,
                           decoration: const InputDecoration(
-                            hintText: 'リアクションする名前を入力して下さい',
+                            hintText: '名前を入力して下さい',
                             labelText: '名前',
                           ),
                         )),
@@ -182,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
           floatingActionButton: FloatingActionButton.extended(
             onPressed: _onSubmitted,
             icon: Icon(Icons.check),
-            label: Text("このイベントにリアクションする"),
+            label: Text("この日程で参加したい！"),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,

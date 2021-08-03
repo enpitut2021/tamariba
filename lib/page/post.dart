@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:hello_world/page/event.dart';
 
 class PostPage extends StatefulWidget {
   @override
@@ -22,44 +23,51 @@ class _PostPagePageState extends State<PostPage> {
   // _mydatetimeStartと_mydatetimeEndを整形してdatetimeを作る関数
   _dateCreate() {
     var mydatetime = _mydatetimeStart.year.toString() +
-      '/' +
-      _mydatetimeStart.month.toString() +
-      '/' +
-      _mydatetimeStart.day.toString() +
-      ' ' +
-      _mydatetimeStart.hour.toString() +
-      ':' +
-      _mydatetimeStart.minute.toString() +
-      '~' +
-      _mydatetimeEnd.year.toString() +
-      '/' +
-      _mydatetimeEnd.month.toString() +
-      '/' +
-      _mydatetimeEnd.day.toString() +
-      ' ' +
-      _mydatetimeEnd.hour.toString() +
-      ':' +
-      _mydatetimeEnd.minute.toString();
+        '/' +
+        _mydatetimeStart.month.toString() +
+        '/' +
+        _mydatetimeStart.day.toString() +
+        ' ' +
+        _mydatetimeStart.hour.toString() +
+        ':' +
+        _mydatetimeStart.minute.toString() +
+        '~' +
+        _mydatetimeEnd.year.toString() +
+        '/' +
+        _mydatetimeEnd.month.toString() +
+        '/' +
+        _mydatetimeEnd.day.toString() +
+        ' ' +
+        _mydatetimeEnd.hour.toString() +
+        ':' +
+        _mydatetimeEnd.minute.toString();
     return mydatetime;
   }
 
-  _onSubmitted() {
+  _onSubmitted() async {
     CollectionReference posts = FirebaseFirestore.instance.collection('event');
-    posts.add({
+    var posted = await posts.add({
       "username": _textEditingControllerUsername.text,
       "title": _textEditingControllerTitle.text,
-    }).then((value) {
-      if (candidate.length == 0) {
-        // candidateが空の状態で投稿する場合
-        var mydatetime = _dateCreate();
-        posts.doc(value.id).collection('optionList').add({"option": mydatetime});
-      } else {
-        // 複数の日程候補がある場合
-        for (var i in candidate) {
-          posts.doc(value.id).collection('optionList').add({"option": i});
-        }
-      }
     });
+
+    if (candidate.length == 0) {
+      // candidateが空の状態で投稿する場合
+      var mydatetime = _dateCreate();
+      await posts
+          .doc(posted.id)
+          .collection('optionList')
+          .add({"option": mydatetime});
+    } else {
+      // 複数の日程候補がある場合
+      for (var i in candidate) {
+        await posts.doc(posted.id).collection('optionList').add({"option": i});
+      }
+    }
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return EventPage(eventId: posted.id);
+    }));
 
     /// 入力欄をクリアにする
     _textEditingControllerUsername.clear();
@@ -107,7 +115,7 @@ class _PostPagePageState extends State<PostPage> {
           ),
         ),
         // Column(
-        //   mainAxisAlignment: MainAxisAlignment.center, 
+        //   mainAxisAlignment: MainAxisAlignment.center,
         // ),
         TextButton(
           onPressed: () {
@@ -134,7 +142,7 @@ class _PostPagePageState extends State<PostPage> {
           //child: Icon(Icons.access_time),
 
           child: Text(
-            '開始日時を選択',
+            'イベント開始日時を選択',
             style: TextStyle(color: Colors.blue),
           ),
         ),
@@ -169,7 +177,7 @@ class _PostPagePageState extends State<PostPage> {
           //child: Icon(Icons.access_time),
 
           child: Text(
-            '終了日時を選択',
+            'イベント終了日時を選択',
             style: TextStyle(color: Colors.blue),
           ),
         ),
@@ -179,7 +187,8 @@ class _PostPagePageState extends State<PostPage> {
           formatter.format(_mydatetimeEnd),
           style: Theme.of(context).textTheme.display1,
         ),
-        TextButton(onPressed: () => {_dateAdded()}, child: Text('候補日時を追加する')),
+        TextButton(
+            onPressed: () => {_dateAdded()}, child: Text('イベント候補日時を追加する')),
         TextButton(onPressed: () => {_onSubmitted()}, child: Text('投稿'))
       ]),
     );
