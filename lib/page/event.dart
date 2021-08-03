@@ -12,10 +12,9 @@ class EventPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'イベントページ',
-      home: Scaffold(
-          body: (MyHomePage(
+      home: MyHomePage(
         eventId: this.eventId,
-      ))),
+      ),
     );
   }
 }
@@ -36,11 +35,11 @@ class MyHomePage extends StatefulWidget {
 class Props {
   Props({required this.event, required this.date});
 
-  DocumentSnapshot<Object?> event;
-  QuerySnapshot<Map<String, dynamic>> date;
+  final DocumentSnapshot<Object?> event;
+  final QuerySnapshot<Map<String, dynamic>> date;
 }
 
-Future<Props>? initialProps(
+Future<Props> initialProps(
     CollectionReference eventList, String eventId) async {
   DocumentReference<Object?> eventRef = eventList.doc(eventId);
 
@@ -59,60 +58,87 @@ class _MyHomePageState extends State<MyHomePage> {
   CollectionReference eventList =
       FirebaseFirestore.instance.collection('event');
 
+  // state
+  List<bool> _dateDataReactionFlag = List.filled(100, false);
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Props>(
       future: initialProps(eventList, eventId),
       builder: (BuildContext context, AsyncSnapshot<Props> snapshot) {
         if (snapshot.hasError) {
-          return Text("Error: ${snapshot.error}");
+          return Scaffold(body: Text("Error: ${snapshot.error}"));
         }
         if (snapshot.hasData && !snapshot.data!.event.exists) {
-          return Text("Event does not exist");
+          return Scaffold(body: Text("Event does not exist"));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return Scaffold(
+              body: Center(
             child: CircularProgressIndicator(
               semanticsLabel: 'Linear progress indicator',
             ),
-          );
+          ));
         }
 
         Map<String, dynamic> eventData =
             snapshot.data!.event.data() as Map<String, dynamic>;
-
         List<QueryDocumentSnapshot<Map<String, dynamic>>> dateData =
             snapshot.data!.date.docs;
 
-        bool _flag = false;
-
-        void _handleCheckbox(bool? e) {
-          setState(() {
-            _flag = true;
-          });
-        }
-
-        return Container(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(children: [
-              Column(
-                children: <Widget>[
-                  Text(eventData["title"]),
-                  Text(eventData["username"]),
-                  Column(
-                    children: dateData
-                        .map<Widget>((e) => new CheckboxListTile(
-                              title: Text('${e.data()["option"]}'),
-                              subtitle: Text('${e.data()["reaction"]}'),
-                              controlAffinity: ListTileControlAffinity.leading,
-                              value: _flag,
-                              onChanged: _handleCheckbox,
-                            ))
-                        .toList(),
-                  )
-                ],
-              ),
-            ]));
+        return Scaffold(
+          body: Container(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '${eventData["title"]}',
+                      style: const TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '👽投稿者: ${eventData["username"]}',
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      '📍日時',
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    Column(
+                      // 日時のチェックボックス
+                      children: dateData
+                          .map<Widget>((e) => CheckboxListTile(
+                                title: Text('${e.data()["option"]}'), // 日時
+                                subtitle: Text(
+                                    '${e.data()["reaction"]}'), // リアクションした人の名前配列
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                                value:
+                                    _dateDataReactionFlag[dateData.indexOf(e)],
+                                onChanged: (bool? newValue) => {
+                                  setState(() {
+                                    _dateDataReactionFlag[dateData.indexOf(e)] =
+                                        newValue ?? false;
+                                  })
+                                },
+                              ))
+                          .toList(),
+                    )
+                  ],
+                ),
+              ])),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {},
+            icon: Icon(Icons.check),
+            label: Text("このイベントにリアクションする"),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+        );
       },
     );
   }
