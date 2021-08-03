@@ -29,9 +29,6 @@ class _PostPagePageState extends State<PostPage> {
   var _mydatetime = new DateTime.now();
   var formatter = new DateFormat('yyyy/MM/dd(E) HH:mm');
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,37 +64,47 @@ class _PostPagePageState extends State<PostPage> {
             labelText: 'イベント名',
           ),
         ),
-        FloatingActionButton(
+        TextButton(
           onPressed: () {
             DatePicker.showDateTimePicker(
               context,
               showTitleActions: true,
               // onChanged内の処理はDatepickerの選択に応じて毎回呼び出される
               onChanged: (date) {
-                  // print('change $date');
-              }, 
+                // print('change $date');
+              },
               // onConfirm内の処理はDatepickerで選択完了後に呼び出される
               onConfirm: (date) {
                 setState(() {
                   _mydatetime = date;
                 });
-              }, 
+              },
               // Datepickerのデフォルトで表示する日時
-              currentTime: DateTime.now(), 
+              currentTime: DateTime.now(),
               // localによって色々な言語に対応
               //  locale: LocaleType.en
             );
           },
-          tooltip: 'Datetime',
-          child: Icon(Icons.access_time),
+          //tooltip: 'Datetime',
+          //child: Icon(Icons.access_time),
+
+          child: Text(
+            'show date picker(custom theme &date time range)',
+            style: TextStyle(color: Colors.blue),
+          ),
+        ),
+        Text(
+          // フォーマッターを使用して指定したフォーマットで日時を表示
+          // format()に渡すのはDate型の値で、String型で返される
+          formatter.format(_mydatetime),
+          style: Theme.of(context).textTheme.display1,
         ),
         TextButton(
-          onPressed: () => {
-                _onSubmitted(_textEditingControllerUsername,
-                    _textEditingControllerTitle)
-              },
-          child: Text('投稿')
-        )
+            onPressed: () => {
+                  _onSubmitted(_textEditingControllerUsername,
+                      _textEditingControllerTitle)
+                },
+            child: Text('投稿'))
       ]),
     );
   }
