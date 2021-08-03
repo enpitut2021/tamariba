@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 
 class PostPage extends StatefulWidget {
   @override
@@ -22,6 +24,13 @@ class _PostPagePageState extends State<PostPage> {
     _textEditingControllerUsername.clear();
     _textEditingControllerTitle.clear();
   }
+
+  // 日付作成
+  var _mydatetime = new DateTime.now();
+  var formatter = new DateFormat('yyyy/MM/dd(E) HH:mm');
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +67,37 @@ class _PostPagePageState extends State<PostPage> {
             labelText: 'イベント名',
           ),
         ),
+        FloatingActionButton(
+          onPressed: () {
+            DatePicker.showDateTimePicker(
+              context,
+              showTitleActions: true,
+              // onChanged内の処理はDatepickerの選択に応じて毎回呼び出される
+              onChanged: (date) {
+                  // print('change $date');
+              }, 
+              // onConfirm内の処理はDatepickerで選択完了後に呼び出される
+              onConfirm: (date) {
+                setState(() {
+                  _mydatetime = date;
+                });
+              }, 
+              // Datepickerのデフォルトで表示する日時
+              currentTime: DateTime.now(), 
+              // localによって色々な言語に対応
+              //  locale: LocaleType.en
+            );
+          },
+          tooltip: 'Datetime',
+          child: Icon(Icons.access_time),
+        ),
         TextButton(
-            onPressed: () => {
-                  _onSubmitted(_textEditingControllerUsername,
-                      _textEditingControllerTitle)
-                },
-            child: Text('投稿'))
+          onPressed: () => {
+                _onSubmitted(_textEditingControllerUsername,
+                    _textEditingControllerTitle)
+              },
+          child: Text('投稿')
+        )
       ]),
     );
   }
