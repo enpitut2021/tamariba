@@ -44,10 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   eventId: eventId,
                 ),
               ));
-        }, // タップ
-        onLongPress: () {
-          print("onLongTap called.");
-        }, // 長押し
+        },
       ),
     );
   }
