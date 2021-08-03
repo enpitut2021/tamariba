@@ -60,6 +60,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // state
   List<bool> _dateDataReactionFlag = List.filled(100, false);
+  TextEditingController _userName = TextEditingController();
+
+  _onSubmitted() async {
+    CollectionReference<Map<String, dynamic>> optionListRef = FirebaseFirestore
+        .instance
+        .collection('event')
+        .doc(eventId)
+        .collection('optionList');
+
+    QuerySnapshot optionListSnap = await optionListRef.get();
+
+    optionListSnap.docs.asMap().forEach((i, doc) async {
+      DocumentReference target = optionListRef.doc(doc.id);
+      Map<String, dynamic> list = doc.data() as Map<String, dynamic>;
+
+      if (_dateDataReactionFlag[i]) {
+        target.update({
+          'option': list['option'],
+          'reaction': [...list['reaction'], _userName.text],
+        });
+      }
+
+      Navigator.of(context)
+          .push(new MaterialPageRoute(builder: (BuildContext context) {
+        return new EventPage(eventId: eventId);
+      }));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +95,11 @@ class _MyHomePageState extends State<MyHomePage> {
       future: initialProps(eventList, eventId),
       builder: (BuildContext context, AsyncSnapshot<Props> snapshot) {
         if (snapshot.hasError) {
-          return Scaffold(body: Text("Error: ${snapshot.error}"));
+          return Scaffold(
+              body: Center(child: Text("Error: ${snapshot.error}")));
         }
         if (snapshot.hasData && !snapshot.data!.event.exists) {
-          return Scaffold(body: Text("Event does not exist"));
+          return Scaffold(body: Center(child: Text("Event does not exist")));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -94,27 +123,37 @@ class _MyHomePageState extends State<MyHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      '${eventData["title"]}',
+                      '${eventData['title']}',
                       style: const TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      '👽投稿者: ${eventData["username"]}',
+                      '👽投稿者: ${eventData['username']}',
                       style: const TextStyle(fontSize: 20),
                     ),
                     Text(
-                      '📍日時',
+                      '📍日時を指定してリアクションする',
                       style: const TextStyle(fontSize: 20),
+                    ),
+                    TextField(
+                      controller: _userName,
+                      maxLength: 10, // 入力数
+                      maxLines: 1,
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.account_balance),
+                        hintText: 'リアクションする名前を入力して下さい',
+                        labelText: '名前',
+                      ),
                     ),
                     Column(
                       // 日時のチェックボックス
                       children: dateData
                           .map<Widget>((e) => CheckboxListTile(
-                                title: Text('${e.data()["option"]}'), // 日時
+                                title: Text('${e.data()['option']}'), // 日時
                                 subtitle: Text(
-                                    '${e.data()["reaction"]}'), // リアクションした人の名前配列
+                                    '${e.data()['reaction']}'), // リアクションした人の名前配列
                                 controlAffinity:
                                     ListTileControlAffinity.leading,
                                 value:
@@ -127,12 +166,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 },
                               ))
                           .toList(),
-                    )
+                    ),
                   ],
                 ),
               ])),
           floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {},
+            onPressed: _onSubmitted,
             icon: Icon(Icons.check),
             label: Text("このイベントにリアクションする"),
           ),
