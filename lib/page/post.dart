@@ -11,11 +11,11 @@ class _PostPagePageState extends State<PostPage> {
       TextEditingController();
   TextEditingController _textEditingControllerTitle = TextEditingController();
 
-  _onSubmitted(String content) {
+  _onSubmitted(_textEditingControllerUsername, _textEditingControllerTitle) {
     CollectionReference posts = FirebaseFirestore.instance.collection('event');
     posts.add({
-      "username": _textEditingControllerUsername,
-      "title": _textEditingControllerTitle,
+      "username": _textEditingControllerUsername.text,
+      "title": _textEditingControllerTitle.text,
     });
 
     /// 入力欄をクリアにする
@@ -32,10 +32,9 @@ class _PostPagePageState extends State<PostPage> {
       body: Column(children: [
         TextField(
           controller: _textEditingControllerUsername,
-          onSubmitted: _onSubmitted,
           enabled: true,
           maxLength: 50, // 入力数
-          maxLengthEnforced: false, // 入力上限になったときに、文字入力を抑制するか
+          //maxLengthEnforced: false, // 入力上限になったときに、文字入力を抑制するか
           style: TextStyle(color: Colors.black),
           obscureText: false,
           maxLines: 1,
@@ -49,7 +48,7 @@ class _PostPagePageState extends State<PostPage> {
           controller: _textEditingControllerTitle,
           enabled: true,
           maxLength: 50, // 入力数
-          maxLengthEnforced: false, // 入力上限になったときに、文字入力を抑制するか
+          //maxLengthEnforcement: false, // 入力上限になったときに、文字入力を抑制するか
           style: TextStyle(color: Colors.black),
           obscureText: false,
           maxLines: 1,
@@ -59,6 +58,12 @@ class _PostPagePageState extends State<PostPage> {
             labelText: 'イベント名',
           ),
         ),
+        TextButton(
+            onPressed: () => {
+                  _onSubmitted(_textEditingControllerUsername,
+                      _textEditingControllerTitle)
+                },
+            child: Text('投稿'))
       ]),
     );
   }
