@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import './post.dart';
 
 class ThemeSelection extends StatelessWidget {
   @override
@@ -75,7 +76,12 @@ class _MyHomePageState extends State<MyHomePage> {
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             return new TextButton(
-              onPressed: () => {_shareTwitter(data['template'])},
+              // onPressed: () => {_shareTwitter(data['template'])}, // twitterに投稿
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                  return PostPage();
+                }));
+              },
               child: Container(
                 margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
                 padding: const EdgeInsets.all(5.0),
