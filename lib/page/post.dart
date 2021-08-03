@@ -19,41 +19,42 @@ class _PostPagePageState extends State<PostPage> {
   var formatter = new DateFormat('yyyy/MM/dd(E) HH:mm');
   var candidate = [];
 
-
   _onSubmitted() {
     CollectionReference posts = FirebaseFirestore.instance.collection('event');
     posts.add({
       "username": _textEditingControllerUsername.text,
       "title": _textEditingControllerTitle.text,
-    }).then((value) => posts.doc(value.id).collection('optionList').add({
-          "option": 
-        }));
+    }).then((value) {
+      for (var i in candidate) {
+        posts.doc(value.id).collection('optionList').add({"option": i});
+      }
+    });
 
     /// 入力欄をクリアにする
     _textEditingControllerUsername.clear();
     _textEditingControllerTitle.clear();
   }
 
-  _dateAdded(){
+  _dateAdded() {
     var mydatetime = _mydatetimeStart.year.toString() +
-              '/' +
-              _mydatetimeStart.month.toString() +
-              '/' +
-              _mydatetimeStart.day.toString() +
-              ' ' +
-              _mydatetimeStart.hour.toString() +
-              ':' +
-              _mydatetimeStart.minute.toString() +
-              '~' +
-              _mydatetimeEnd.year.toString() +
-              '/' +
-              _mydatetimeEnd.month.toString() +
-              '/' +
-              _mydatetimeEnd.day.toString() +
-              ' ' +
-              _mydatetimeEnd.hour.toString() +
-              ':' +
-              _mydatetimeEnd.minute.toString();
+        '/' +
+        _mydatetimeStart.month.toString() +
+        '/' +
+        _mydatetimeStart.day.toString() +
+        ' ' +
+        _mydatetimeStart.hour.toString() +
+        ':' +
+        _mydatetimeStart.minute.toString() +
+        '~' +
+        _mydatetimeEnd.year.toString() +
+        '/' +
+        _mydatetimeEnd.month.toString() +
+        '/' +
+        _mydatetimeEnd.day.toString() +
+        ' ' +
+        _mydatetimeEnd.hour.toString() +
+        ':' +
+        _mydatetimeEnd.minute.toString();
     candidate.add(mydatetime);
   }
 
