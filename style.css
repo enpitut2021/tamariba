@@ -1,0 +1,57 @@
+
+h1 {
+    height: fixed;
+    background: rgb(70, 150, 236);
+    text-align: center;
+    padding: 0;
+    color: #fffffe;
+    font-size: 20px;
+    font-weight: bold;
+    border-top: 0;
+    line-height: 3.0;
+}
+
+
+p{
+padding-bottom: 10px;
+font-size: 18px;
+font-weight: bold;
+color:#2d334a;
+} 
+
+table{
+    color:#2d334a;
+}
+
+div.styled {
+    border: 0;
+    line-height: 2.5;
+    padding: 0 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    background-color:#0175C2;
+    background-image: linear-gradient(to top left,
+                                      rgba(0, 0, 0, .2),
+                                      rgba(0, 0, 0, .2) 30%,
+                                      rgba(0, 0, 0, 0));
+
+}
+
+div.styled:hover {
+    background:#0175C2;
+}
+
+div.styled:active {
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6)djl;
+}
+
+div.container{
+    /* width: 80%; */
+    color:#2d334a;
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
