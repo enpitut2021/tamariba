@@ -12,9 +12,6 @@ class EventPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'イベントページ',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: Scaffold(
           body: (MyHomePage(
         eventId: this.eventId,
@@ -34,6 +31,26 @@ class MyHomePage extends StatefulWidget {
       );
 }
 
+// date: 日時リスト
+// event: イベント詳細
+class Props {
+  Props({required this.event, required this.date});
+
+  DocumentSnapshot<Object?> event;
+  QuerySnapshot<Map<String, dynamic>> date;
+}
+
+Future<Props>? initialProps(
+    CollectionReference eventList, String eventId) async {
+  DocumentReference<Object?> eventRef = eventList.doc(eventId);
+
+  DocumentSnapshot<Object?> event = await eventRef.get();
+  QuerySnapshot<Map<String, dynamic>> date =
+      await eventRef.collection('optionList').get();
+
+  return Props(date: date, event: event);
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   _MyHomePageState({required this.eventId}) : super();
 
@@ -44,28 +61,58 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-      future: eventList.doc(eventId).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+    return FutureBuilder<Props>(
+      future: initialProps(eventList, eventId),
+      builder: (BuildContext context, AsyncSnapshot<Props> snapshot) {
         if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
         }
-
-        if (snapshot.hasData && !snapshot.data!.exists) {
+        if (snapshot.hasData && !snapshot.data!.event.exists) {
           return Text("Event does not exist");
         }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data =
-              snapshot.data!.data() as Map<String, dynamic>;
-          return Text("${data['title']}");
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              semanticsLabel: 'Linear progress indicator',
+            ),
+          );
         }
 
-        // ローディング
-        return CircularProgressIndicator(
-          semanticsLabel: 'Linear progress indicator',
-        );
+        Map<String, dynamic> eventData =
+            snapshot.data!.event.data() as Map<String, dynamic>;
+
+        List<QueryDocumentSnapshot<Map<String, dynamic>>> dateData =
+            snapshot.data!.date.docs;
+
+        bool _flag = false;
+
+        void _handleCheckbox(bool? e) {
+          setState(() {
+            _flag = true;
+          });
+        }
+
+        return Container(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(children: [
+              Column(
+                children: <Widget>[
+                  Text(eventData["title"]),
+                  Text(eventData["username"]),
+                  Column(
+                    children: dateData
+                        .map<Widget>((e) => new CheckboxListTile(
+                              title: Text('${e.data()["option"]}'),
+                              subtitle: Text('${e.data()["reaction"]}'),
+                              controlAffinity: ListTileControlAffinity.leading,
+                              value: _flag,
+                              onChanged: _handleCheckbox,
+                            ))
+                        .toList(),
+                  )
+                ],
+              ),
+            ]));
       },
     );
   }
