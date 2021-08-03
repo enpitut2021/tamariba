@@ -9,25 +9,27 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPagePageState extends State<PostPage> {
-  TextEditingController _textEditingControllerUsername =
-      TextEditingController();
+  // text editing controller
+  TextEditingController _textEditingControllerUsername = TextEditingController();
   TextEditingController _textEditingControllerTitle = TextEditingController();
+  // 日付作成
+  var _mydatetimeStart = new DateTime.now(); // 開始時刻
+  var _mydatetimeEnd   = new DateTime.now(); // 終了時刻
+  var formatter = new DateFormat('yyyy/MM/dd(E) HH:mm');
 
-  _onSubmitted(_textEditingControllerUsername, _textEditingControllerTitle) {
+  _onSubmitted() {
     CollectionReference posts = FirebaseFirestore.instance.collection('event');
     posts.add({
       "username": _textEditingControllerUsername.text,
       "title": _textEditingControllerTitle.text,
-    });
+    }).then((value) => posts.doc(value.id).collection('optionList').add({
+      "option": _mydatetimeStart.toString() + _mydatetimeEnd.toString()
+    }));
 
     /// 入力欄をクリアにする
     _textEditingControllerUsername.clear();
     _textEditingControllerTitle.clear();
   }
-
-  // 日付作成
-  var _mydatetime = new DateTime.now();
-  var formatter = new DateFormat('yyyy/MM/dd(E) HH:mm');
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +78,7 @@ class _PostPagePageState extends State<PostPage> {
               // onConfirm内の処理はDatepickerで選択完了後に呼び出される
               onConfirm: (date) {
                 setState(() {
-                  _mydatetime = date;
+                  _mydatetimeStart = date;
                 });
               },
               // Datepickerのデフォルトで表示する日時
@@ -96,13 +98,47 @@ class _PostPagePageState extends State<PostPage> {
         Text(
           // フォーマッターを使用して指定したフォーマットで日時を表示
           // format()に渡すのはDate型の値で、String型で返される
-          formatter.format(_mydatetime),
+          formatter.format(_mydatetimeStart),
+          style: Theme.of(context).textTheme.display1,
+        ),
+        TextButton(
+          onPressed: () {
+            DatePicker.showDateTimePicker(
+              context,
+              showTitleActions: true,
+              // onChanged内の処理はDatepickerの選択に応じて毎回呼び出される
+              onChanged: (date) {
+                // print('change $date');
+              },
+              // onConfirm内の処理はDatepickerで選択完了後に呼び出される
+              onConfirm: (date) {
+                setState(() {
+                  _mydatetimeEnd = date;
+                });
+              },
+              // Datepickerのデフォルトで表示する日時
+              currentTime: DateTime.now(),
+              // localによって色々な言語に対応
+              //  locale: LocaleType.en
+            );
+          },
+          //tooltip: 'Datetime',
+          //child: Icon(Icons.access_time),
+
+          child: Text(
+            'show date picker(custom theme &date time range)',
+            style: TextStyle(color: Colors.blue),
+          ),
+        ),
+        Text(
+          // フォーマッターを使用して指定したフォーマットで日時を表示
+          // format()に渡すのはDate型の値で、String型で返される
+          formatter.format(_mydatetimeEnd),
           style: Theme.of(context).textTheme.display1,
         ),
         TextButton(
             onPressed: () => {
-                  _onSubmitted(_textEditingControllerUsername,
-                      _textEditingControllerTitle)
+                  _onSubmitted()
                 },
             child: Text('投稿'))
       ]),
