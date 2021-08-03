@@ -19,14 +19,45 @@ class _PostPagePageState extends State<PostPage> {
   var formatter = new DateFormat('yyyy/MM/dd(E) HH:mm');
   var candidate = [];
 
+  // _mydatetimeStartと_mydatetimeEndを整形してdatetimeを作る関数
+  _dateCreate() {
+    var mydatetime = _mydatetimeStart.year.toString() +
+      '/' +
+      _mydatetimeStart.month.toString() +
+      '/' +
+      _mydatetimeStart.day.toString() +
+      ' ' +
+      _mydatetimeStart.hour.toString() +
+      ':' +
+      _mydatetimeStart.minute.toString() +
+      '~' +
+      _mydatetimeEnd.year.toString() +
+      '/' +
+      _mydatetimeEnd.month.toString() +
+      '/' +
+      _mydatetimeEnd.day.toString() +
+      ' ' +
+      _mydatetimeEnd.hour.toString() +
+      ':' +
+      _mydatetimeEnd.minute.toString();
+    return mydatetime;
+  }
+
   _onSubmitted() {
     CollectionReference posts = FirebaseFirestore.instance.collection('event');
     posts.add({
       "username": _textEditingControllerUsername.text,
       "title": _textEditingControllerTitle.text,
     }).then((value) {
-      for (var i in candidate) {
-        posts.doc(value.id).collection('optionList').add({"option": i});
+      if (candidate.length == 0) {
+        // candidateが空の状態で投稿する場合
+        var mydatetime = _dateCreate();
+        posts.doc(value.id).collection('optionList').add({"option": mydatetime});
+      } else {
+        // 複数の日程候補がある場合
+        for (var i in candidate) {
+          posts.doc(value.id).collection('optionList').add({"option": i});
+        }
       }
     });
 
@@ -36,25 +67,7 @@ class _PostPagePageState extends State<PostPage> {
   }
 
   _dateAdded() {
-    var mydatetime = _mydatetimeStart.year.toString() +
-        '/' +
-        _mydatetimeStart.month.toString() +
-        '/' +
-        _mydatetimeStart.day.toString() +
-        ' ' +
-        _mydatetimeStart.hour.toString() +
-        ':' +
-        _mydatetimeStart.minute.toString() +
-        '~' +
-        _mydatetimeEnd.year.toString() +
-        '/' +
-        _mydatetimeEnd.month.toString() +
-        '/' +
-        _mydatetimeEnd.day.toString() +
-        ' ' +
-        _mydatetimeEnd.hour.toString() +
-        ':' +
-        _mydatetimeEnd.minute.toString();
+    var mydatetime = _dateCreate();
     candidate.add(mydatetime);
   }
 
@@ -93,6 +106,9 @@ class _PostPagePageState extends State<PostPage> {
             labelText: 'イベント名',
           ),
         ),
+        // Column(
+        //   mainAxisAlignment: MainAxisAlignment.center, 
+        // ),
         TextButton(
           onPressed: () {
             DatePicker.showDateTimePicker(
@@ -118,7 +134,7 @@ class _PostPagePageState extends State<PostPage> {
           //child: Icon(Icons.access_time),
 
           child: Text(
-            'show date picker(custom theme &date time range)',
+            '開始日時を選択',
             style: TextStyle(color: Colors.blue),
           ),
         ),
@@ -153,7 +169,7 @@ class _PostPagePageState extends State<PostPage> {
           //child: Icon(Icons.access_time),
 
           child: Text(
-            'show date picker(custom theme &date time range)',
+            '終了日時を選択',
             style: TextStyle(color: Colors.blue),
           ),
         ),
