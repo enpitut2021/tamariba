@@ -10,12 +10,15 @@ class PostPage extends StatefulWidget {
 
 class _PostPagePageState extends State<PostPage> {
   // text editing controller
-  TextEditingController _textEditingControllerUsername = TextEditingController();
+  TextEditingController _textEditingControllerUsername =
+      TextEditingController();
   TextEditingController _textEditingControllerTitle = TextEditingController();
   // 日付作成
   var _mydatetimeStart = new DateTime.now(); // 開始時刻
-  var _mydatetimeEnd   = new DateTime.now(); // 終了時刻
+  var _mydatetimeEnd = new DateTime.now(); // 終了時刻
   var formatter = new DateFormat('yyyy/MM/dd(E) HH:mm');
+  var candidate = [];
+
 
   _onSubmitted() {
     CollectionReference posts = FirebaseFirestore.instance.collection('event');
@@ -23,12 +26,35 @@ class _PostPagePageState extends State<PostPage> {
       "username": _textEditingControllerUsername.text,
       "title": _textEditingControllerTitle.text,
     }).then((value) => posts.doc(value.id).collection('optionList').add({
-      "option": _mydatetimeStart.toString() + _mydatetimeEnd.toString()
-    }));
+          "option": 
+        }));
 
     /// 入力欄をクリアにする
     _textEditingControllerUsername.clear();
     _textEditingControllerTitle.clear();
+  }
+
+  _dateAdded(){
+    var mydatetime = _mydatetimeStart.year.toString() +
+              '/' +
+              _mydatetimeStart.month.toString() +
+              '/' +
+              _mydatetimeStart.day.toString() +
+              ' ' +
+              _mydatetimeStart.hour.toString() +
+              ':' +
+              _mydatetimeStart.minute.toString() +
+              '~' +
+              _mydatetimeEnd.year.toString() +
+              '/' +
+              _mydatetimeEnd.month.toString() +
+              '/' +
+              _mydatetimeEnd.day.toString() +
+              ' ' +
+              _mydatetimeEnd.hour.toString() +
+              ':' +
+              _mydatetimeEnd.minute.toString();
+    candidate.add(mydatetime);
   }
 
   @override
@@ -136,11 +162,8 @@ class _PostPagePageState extends State<PostPage> {
           formatter.format(_mydatetimeEnd),
           style: Theme.of(context).textTheme.display1,
         ),
-        TextButton(
-            onPressed: () => {
-                  _onSubmitted()
-                },
-            child: Text('投稿'))
+        TextButton(onPressed: () => {_dateAdded()}, child: Text('候補日時を追加する')),
+        TextButton(onPressed: () => {_onSubmitted()}, child: Text('投稿'))
       ]),
     );
   }
