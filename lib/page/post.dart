@@ -29,7 +29,7 @@ class _PostPagePageState extends State<PostPage> {
   var _mydatetimeStart = new DateTime.now(); // 開始時刻
   var _mydatetimeEnd = new DateTime.now(); // 終了時刻
   var formatter = new DateFormat('yyyy/MM/dd(E) HH:mm');
-  var candidate = [];
+  List<String> _candidate = [];
 
   // _mydatetimeStartと_mydatetimeEndを整形してdatetimeを作る関数
   _dateCreate() {
@@ -62,8 +62,8 @@ class _PostPagePageState extends State<PostPage> {
       "title": _textEditingControllerTitle.text,
     });
 
-    if (candidate.length == 0) {
-      // candidateが空の状態で投稿する場合
+    if (_candidate.length == 0) {
+      // _candidateが空の状態で投稿する場合
       var mydatetime = _dateCreate();
       await posts
           .doc(posted.id)
@@ -71,7 +71,7 @@ class _PostPagePageState extends State<PostPage> {
           .add({"option": mydatetime});
     } else {
       // 複数の日程候補がある場合
-      for (var i in candidate) {
+      for (var i in _candidate) {
         await posts.doc(posted.id).collection('optionList').add({"option": i});
       }
     }
@@ -87,7 +87,9 @@ class _PostPagePageState extends State<PostPage> {
 
   _dateAdded() {
     var mydatetime = _dateCreate();
-    candidate.add(mydatetime);
+    setState(() {
+      _candidate.add(mydatetime);
+    });
   }
 
   @override
@@ -132,82 +134,102 @@ class _PostPagePageState extends State<PostPage> {
             labelText: 'イベント名',
           ),
         ),
-        // Column(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        // ),
-        TextButton(
-          onPressed: () {
-            DatePicker.showDateTimePicker(
-              context,
-              showTitleActions: true,
-              // onChanged内の処理はDatepickerの選択に応じて毎回呼び出される
-              onChanged: (date) {
-                // print('change $date');
-              },
-              // onConfirm内の処理はDatepickerで選択完了後に呼び出される
-              onConfirm: (date) {
-                setState(() {
-                  _mydatetimeStart = date;
-                });
-              },
-              // Datepickerのデフォルトで表示する日時
-              currentTime: DateTime.now(),
-              // localによって色々な言語に対応
-              //  locale: LocaleType.en
-            );
-          },
-          //tooltip: 'Datetime',
-          //child: Icon(Icons.access_time),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(children: [
+              TextButton(
+                onPressed: () {
+                  DatePicker.showDateTimePicker(
+                    context,
+                    showTitleActions: true,
+                    // onChanged内の処理はDatepickerの選択に応じて毎回呼び出される
+                    onChanged: (date) {
+                      // print('change $date');
+                    },
+                    // onConfirm内の処理はDatepickerで選択完了後に呼び出される
+                    onConfirm: (date) {
+                      setState(() {
+                        _mydatetimeStart = date;
+                      });
+                    },
+                    // Datepickerのデフォルトで表示する日時
+                    currentTime: DateTime.now(),
+                    // localによって色々な言語に対応
+                    //  locale: LocaleType.en
+                  );
+                },
+                //tooltip: 'Datetime',
+                //child: Icon(Icons.access_time),
 
-          child: Text(
-            'イベント開始日時を選択',
-            style: TextStyle(color: Colors.blue),
-          ),
-        ),
-        Text(
-          // フォーマッターを使用して指定したフォーマットで日時を表示
-          // format()に渡すのはDate型の値で、String型で返される
-          formatter.format(_mydatetimeStart),
-          style: Theme.of(context).textTheme.display1,
-        ),
-        TextButton(
-          onPressed: () {
-            DatePicker.showDateTimePicker(
-              context,
-              showTitleActions: true,
-              // onChanged内の処理はDatepickerの選択に応じて毎回呼び出される
-              onChanged: (date) {
-                // print('change $date');
-              },
-              // onConfirm内の処理はDatepickerで選択完了後に呼び出される
-              onConfirm: (date) {
-                setState(() {
-                  _mydatetimeEnd = date;
-                });
-              },
-              // Datepickerのデフォルトで表示する日時
-              currentTime: DateTime.now(),
-              // localによって色々な言語に対応
-              //  locale: LocaleType.en
-            );
-          },
-          //tooltip: 'Datetime',
-          //child: Icon(Icons.access_time),
+                child: Text(
+                  'イベント開始日時を選択',
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
+              Text(
+                // フォーマッターを使用して指定したフォーマットで日時を表示
+                // format()に渡すのはDate型の値で、String型で返される
+                formatter.format(_mydatetimeStart),
+                style: Theme.of(context).textTheme.display1,
+              ),
+            ]),
+            Column(children: [
+              TextButton(
+                onPressed: () {
+                  DatePicker.showDateTimePicker(
+                    context,
+                    showTitleActions: true,
+                    // onChanged内の処理はDatepickerの選択に応じて毎回呼び出される
+                    onChanged: (date) {
+                      // print('change $date');
+                    },
+                    // onConfirm内の処理はDatepickerで選択完了後に呼び出される
+                    onConfirm: (date) {
+                      setState(() {
+                        _mydatetimeEnd = date;
+                      });
+                    },
+                    // Datepickerのデフォルトで表示する日時
+                    currentTime: DateTime.now(),
+                    // localによって色々な言語に対応
+                    //  locale: LocaleType.en
+                  );
+                },
+                //tooltip: 'Datetime',
+                //child: Icon(Icons.access_time),
 
-          child: Text(
-            'イベント終了日時を選択',
-            style: TextStyle(color: Colors.blue),
-          ),
-        ),
-        Text(
-          // フォーマッターを使用して指定したフォーマットで日時を表示
-          // format()に渡すのはDate型の値で、String型で返される
-          formatter.format(_mydatetimeEnd),
-          style: Theme.of(context).textTheme.display1,
+                child: Text(
+                  'イベント終了日時を選択',
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
+              Text(
+                // フォーマッターを使用して指定したフォーマットで日時を表示
+                // format()に渡すのはDate型の値で、String型で返される
+                formatter.format(_mydatetimeEnd),
+                style: Theme.of(context).textTheme.display1,
+              ),
+            ]),
+          ],
         ),
         TextButton(
             onPressed: () => {_dateAdded()}, child: Text('イベント候補日時を追加する')),
-        TextButton(onPressed: () => {_onSubmitted()}, child: Text('投稿'))
+        Column(children: _candidate.map<Widget>((e) => Text(e)).toList()),
+        TextButton(
+          onPressed: _onSubmitted,
+          child: Container(
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            padding: const EdgeInsets.all(5.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blue),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Container(
+              child: Text('投稿'),
+            ),
+          ),
+        ),
       ]),
     );
   }
