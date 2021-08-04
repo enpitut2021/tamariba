@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // onPressed: () => {_shareTwitter(data['template'])}, // twitterに投稿
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return PostPage();
+                  return PostPage(eventTitle: data['template'],);
                 }));
               },
               child: Container(

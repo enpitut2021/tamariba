@@ -5,14 +5,25 @@ import 'package:intl/intl.dart';
 import 'package:hello_world/page/event.dart';
 
 class PostPage extends StatefulWidget {
+  PostPage({Key? key, required this.eventTitle}) : super(key: key);
+
+  // イベントタイトル
+  final String eventTitle;
+
   @override
-  _PostPagePageState createState() => _PostPagePageState();
+  _PostPagePageState createState() => _PostPagePageState(
+    eventTitle: this.eventTitle,
+  );
 }
 
 class _PostPagePageState extends State<PostPage> {
+  _PostPagePageState({required this.eventTitle}) : super();
+
+  // イベントタイトル
+  final String eventTitle;
+
   // text editing controller
-  TextEditingController _textEditingControllerUsername =
-      TextEditingController();
+  TextEditingController _textEditingControllerUsername = TextEditingController();
   TextEditingController _textEditingControllerTitle = TextEditingController();
   // 日付作成
   var _mydatetimeStart = new DateTime.now(); // 開始時刻
@@ -77,6 +88,13 @@ class _PostPagePageState extends State<PostPage> {
   _dateAdded() {
     var mydatetime = _dateCreate();
     candidate.add(mydatetime);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // 選択されたテーマを初期値として設定
+    _textEditingControllerTitle = new TextEditingController(text: this.eventTitle);
   }
 
   @override
