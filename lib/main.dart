@@ -25,7 +25,7 @@ class TabInfo {
 
 class MyApp extends StatelessWidget {
   final List<TabInfo> _tabs = [
-    TabInfo("イベント作成", ThemeSelection()),
+    TabInfo("イベント作成", ThemeSelection(title: '')),
     TabInfo("イベント一覧", EventListPage()),
   ];
 

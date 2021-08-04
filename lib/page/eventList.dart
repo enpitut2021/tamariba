@@ -2,27 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hello_world/page/event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class EventListPage extends StatelessWidget {
-  EventListPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'イベント一覧',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(body: (MyHomePage())),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
+class EventListPage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<EventListPage> {
   final Stream<QuerySnapshot<Map<String, dynamic>>> _eventListStream =
       FirebaseFirestore.instance.collection('event').snapshots();
 
