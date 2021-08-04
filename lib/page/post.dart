@@ -134,47 +134,49 @@ class _PostPagePageState extends State<PostPage> {
             labelText: 'イベント名',
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(children: [
-              TextButton(
-                onPressed: () {
-                  DatePicker.showDateTimePicker(
-                    context,
-                    showTitleActions: true,
-                    // onChanged内の処理はDatepickerの選択に応じて毎回呼び出される
-                    onChanged: (date) {
-                      // print('change $date');
-                    },
-                    // onConfirm内の処理はDatepickerで選択完了後に呼び出される
-                    onConfirm: (date) {
-                      setState(() {
-                        _mydatetimeStart = date;
-                      });
-                    },
-                    // Datepickerのデフォルトで表示する日時
-                    currentTime: DateTime.now(),
-                    // localによって色々な言語に対応
-                    //  locale: LocaleType.en
-                  );
-                },
-                //tooltip: 'Datetime',
-                //child: Icon(Icons.access_time),
+        Container(
+          margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+          child: Column(children: [
+            TextButton(
+              onPressed: () {
+                DatePicker.showDateTimePicker(
+                  context,
+                  showTitleActions: true,
+                  // onChanged内の処理はDatepickerの選択に応じて毎回呼び出される
+                  onChanged: (date) {
+                    // print('change $date');
+                  },
+                  // onConfirm内の処理はDatepickerで選択完了後に呼び出される
+                  onConfirm: (date) {
+                    setState(() {
+                      _mydatetimeStart = date;
+                    });
+                  },
+                  // Datepickerのデフォルトで表示する日時
+                  currentTime: DateTime.now(),
+                  // localによって色々な言語に対応
+                  //  locale: LocaleType.en
+                );
+              },
+              //tooltip: 'Datetime',
+              //child: Icon(Icons.access_time),
 
-                child: Text(
-                  'イベント開始日時を選択',
-                  style: TextStyle(color: Colors.blue),
-                ),
+              child: Text(
+                'イベント開始日時を選択',
+                style: TextStyle(color: Colors.blue),
               ),
-              Text(
-                // フォーマッターを使用して指定したフォーマットで日時を表示
-                // format()に渡すのはDate型の値で、String型で返される
-                formatter.format(_mydatetimeStart),
-                style: Theme.of(context).textTheme.display1,
-              ),
-            ]),
-            Column(children: [
+            ),
+            Text(
+              // フォーマッターを使用して指定したフォーマットで日時を表示
+              // format()に渡すのはDate型の値で、String型で返される
+              formatter.format(_mydatetimeStart),
+              style: Theme.of(context).textTheme.display1,
+            ),
+          ]),
+        ),
+        Container(
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 40),
+            child: Column(children: [
               TextButton(
                 onPressed: () {
                   DatePicker.showDateTimePicker(
@@ -210,27 +212,17 @@ class _PostPagePageState extends State<PostPage> {
                 formatter.format(_mydatetimeEnd),
                 style: Theme.of(context).textTheme.display1,
               ),
-            ]),
-          ],
-        ),
+            ])),
         TextButton(
             onPressed: () => {_dateAdded()}, child: Text('イベント候補日時を追加する')),
         Column(children: _candidate.map<Widget>((e) => Text(e)).toList()),
-        TextButton(
-          onPressed: _onSubmitted,
-          child: Container(
-            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-            padding: const EdgeInsets.all(5.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blue),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Container(
-              child: Text('投稿'),
-            ),
-          ),
-        ),
       ]),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _onSubmitted,
+        icon: Icon(Icons.check),
+        label: Text('投稿'),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
